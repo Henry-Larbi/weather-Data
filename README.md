@@ -32,9 +32,12 @@ with open("weather_sample.csv", newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     rows = list(reader)
 
-avg_temp = sum(float(r["temp_c"]) for r in rows) / len(rows)
 print(f"Rows: {len(rows)}")
-print(f"Average temperature: {avg_temp:.1f}°C")
+if rows:
+    avg_temp = sum(float(r["temp_c"]) for r in rows) / len(rows)
+    print(f"Average temperature: {avg_temp:.1f}°C")
+else:
+    print("No weather rows found.")
 ```
 
 ## Suggested next exercises
