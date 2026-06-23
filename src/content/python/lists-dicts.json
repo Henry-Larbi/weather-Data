@@ -1,0 +1,78 @@
+{
+  "id": "lists-dicts",
+  "title": "Lists & Dictionaries",
+  "level": "beginner",
+  "description": "Store ordered collections with lists and key/value pairs with dictionaries.",
+  "lesson": {
+    "id": "lists-dicts",
+    "title": "Lists & Dictionaries",
+    "summary": "Python's two workhorse containers: ordered lists and keyed dictionaries.",
+    "estimatedMinutes": 12,
+    "body": "## Lists: ordered collections\n\nA **list** holds items in order, inside square brackets:\n\n```python\nfruits = [\"apple\", \"banana\", \"cherry\"]\n```\n\nAccess items by index (from 0) and update them in place — lists are *mutable*:\n\n```python\nfruits[0]            # \"apple\"\nfruits[0] = \"mango\"  # lists can be changed\nlen(fruits)           # 3\n```\n\nCommon list operations:\n\n```python\nfruits.append(\"kiwi\")    # add to the end\nfruits.insert(0, \"pear\")  # add at a position\nfruits.remove(\"banana\")   # remove by value\nfruits.pop()               # remove & return the last item\n\"apple\" in fruits          # membership test -> True/False\n```\n\n## Dictionaries: key/value pairs\n\nA **dictionary** maps keys to values, inside curly braces:\n\n```python\nperson = {\"name\": \"Ada\", \"age\": 30}\n```\n\nLook things up and update them by key:\n\n```python\nperson[\"name\"]          # \"Ada\"\nperson[\"age\"] = 31       # update\nperson[\"city\"] = \"London\" # add a new key\n\"email\" in person        # False\n```\n\nUse `.get()` to avoid errors when a key might be missing:\n\n```python\nperson.get(\"email\")              # None (no error)\nperson.get(\"email\", \"unknown\")  # \"unknown\" (default)\n```\n\n## When to use which\n\n- Reach for a **list** when order matters and you mostly access items by position.\n- Reach for a **dict** when you look things up by a meaningful key (a name, an id).\n\nBoth can hold any type of value, and they can be nested — a list of dicts is extremely common."
+    ,
+    "examples": [
+      {
+        "title": "Grow and shrink a list",
+        "code": "fruits = [\"apple\", \"banana\"]\nfruits.append(\"cherry\")\nfruits.insert(0, \"pear\")\nprint(fruits)\nlast = fruits.pop()\nprint(\"removed:\", last)\nprint(\"remaining:\", fruits)"
+      },
+      {
+        "title": "Look things up in a dict",
+        "description": "Notice how .get() returns a default instead of crashing.",
+        "code": "person = {\"name\": \"Ada\", \"age\": 30}\nperson[\"city\"] = \"London\"\nprint(person[\"name\"])\nprint(person.get(\"email\", \"no email on file\"))\nfor key, value in person.items():\n    print(f\"{key}: {value}\")"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "lists-dicts-quiz",
+    "title": "Lists & Dictionaries — Quiz",
+    "questions": [
+      {
+        "id": "ld-q1",
+        "kind": "multiple-choice",
+        "prompt": "Which brackets create a dictionary?",
+        "options": ["[ ]", "( )", "{ }", "< >"],
+        "answerIndex": 2,
+        "explanation": "Curly braces `{}` with key: value pairs create a dict. Square brackets make a list."
+      },
+      {
+        "id": "ld-q2",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nnums = [10, 20, 30]\nnums.append(40)\nprint(len(nums))\n```",
+        "options": ["3", "4", "40", "Error"],
+        "answerIndex": 1,
+        "explanation": "append adds one item, so the list now has 4 elements."
+      },
+      {
+        "id": "ld-q3",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nd = {\"a\": 1}\nprint(d.get(\"b\", 0))\n```",
+        "options": ["1", "0", "None", "KeyError"],
+        "answerIndex": 1,
+        "explanation": "Key \"b\" is missing, so .get returns the default 0 (no error)."
+      },
+      {
+        "id": "ld-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nfruits = [\"apple\", \"banana\"]\nprint(\"cherry\" in fruits)\n```",
+        "options": ["True", "False", "0", "Error"],
+        "answerIndex": 1,
+        "explanation": "\"cherry\" is not in the list, so the membership test is False."
+      },
+      {
+        "id": "ld-q5",
+        "kind": "multiple-choice",
+        "prompt": "You want to store a phone book that maps names to numbers. Which is the better fit?",
+        "options": ["A list", "A dictionary", "A string", "A bool"],
+        "answerIndex": 1,
+        "explanation": "Looking up by a meaningful key (a name) is exactly what dictionaries are for."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "ld-f1", "front": "How do you add an item to the end of a list?", "back": "`my_list.append(item)`." },
+    { "id": "ld-f2", "front": "How do you read the value for key \"name\" in a dict `d`?", "back": "`d[\"name\"]` — or `d.get(\"name\")` to avoid a KeyError if it's missing." },
+    { "id": "ld-f3", "front": "Are lists mutable?", "back": "Yes. You can change, add, and remove items in place." },
+    { "id": "ld-f4", "front": "What does `\"x\" in collection` return?", "back": "A bool — True if the item/key is present, False otherwise." },
+    { "id": "ld-f5", "front": "List vs dict: which for lookup by meaningful key?", "back": "A dictionary. Use a list when order/position matters." }
+  ]
+}

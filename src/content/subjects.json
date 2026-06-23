@@ -1,0 +1,16 @@
+[
+  {
+    "id": "python",
+    "title": "Python",
+    "description": "Learn Python from first variables to writing your own functions.",
+    "dir": "python",
+    "modules": [
+      "variables",
+      "strings",
+      "lists-dicts",
+      "conditionals",
+      "loops",
+      "functions"
+    ]
+  }
+]

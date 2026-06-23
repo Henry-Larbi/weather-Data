@@ -1,0 +1,79 @@
+{
+  "id": "variables",
+  "title": "Variables & Data Types",
+  "level": "beginner",
+  "description": "Store values in variables and meet Python's core built-in types.",
+  "lesson": {
+    "id": "variables",
+    "title": "Variables & Data Types",
+    "summary": "Bind names to values and learn the four everyday built-in types.",
+    "estimatedMinutes": 8,
+    "body": "## Variables are names for values\n\nIn Python you create a **variable** by assigning a value to a name with `=`:\n\n```python\nage = 30\nname = \"Ada\"\n```\n\nThe name on the left now refers to the value on the right. You don't declare a type ahead of time — Python figures it out from the value. This is called *dynamic typing*.\n\n## The everyday built-in types\n\n| Type | Example | Meaning |\n|------|---------|---------|\n| `int` | `42` | Whole number |\n| `float` | `3.14` | Number with a decimal point |\n| `str` | `\"hello\"` | Text |\n| `bool` | `True` / `False` | Truth value |\n\nUse the built-in `type()` function to ask Python what type a value is:\n\n```python\ntype(42)        # <class 'int'>\ntype(3.14)      # <class 'float'>\ntype(\"hello\")   # <class 'str'>\ntype(True)      # <class 'bool'>\n```\n\n## Reassigning and re-typing\n\nA variable can be reassigned at any time, even to a value of a different type:\n\n```python\nx = 10      # x is an int\nx = \"ten\"   # now x is a str\n```\n\nThat flexibility is powerful but means you should keep track of what a name holds.\n\n## Converting between types\n\nYou can convert values with the type names: `int()`, `float()`, `str()`, `bool()`.\n\n```python\nint(\"5\") + 1     # 6  (string \"5\" becomes the number 5)\nstr(5) + \"!\"     # \"5!\"\nfloat(\"2.5\")     # 2.5\n```\n\nThis matters because input from a user always arrives as a string — convert it before doing math."
+    ,
+    "examples": [
+      {
+        "title": "Inspect a few values",
+        "description": "Run it, then change the values and see how the reported types change.",
+        "code": "age = 30\npi = 3.14159\nname = \"Ada\"\nis_student = True\n\nprint(age, type(age))\nprint(pi, type(pi))\nprint(name, type(name))\nprint(is_student, type(is_student))"
+      },
+      {
+        "title": "Convert a string to a number",
+        "description": "Why \"5\" + 1 fails but int(\"5\") + 1 works.",
+        "code": "quantity = \"5\"\nprint(int(quantity) + 1)   # 6\n# print(quantity + 1)      # uncomment to see a TypeError"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "variables-quiz",
+    "title": "Variables & Data Types — Quiz",
+    "questions": [
+      {
+        "id": "v-q1",
+        "kind": "multiple-choice",
+        "prompt": "Which symbol assigns a value to a variable in Python?",
+        "options": ["==", "=", ":=", "->"],
+        "answerIndex": 1,
+        "explanation": "A single `=` assigns. `==` compares for equality."
+      },
+      {
+        "id": "v-q2",
+        "kind": "multiple-choice",
+        "prompt": "What is the type of the value `3.0`?",
+        "options": ["int", "float", "str", "bool"],
+        "answerIndex": 1,
+        "explanation": "A decimal point makes it a `float`, even though the value equals 3."
+      },
+      {
+        "id": "v-q3",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nx = 4\nx = \"four\"\nprint(type(x))\n```",
+        "options": ["<class 'int'>", "<class 'str'>", "Error", "<class 'four'>"],
+        "answerIndex": 1,
+        "explanation": "Reassigning `x` to a string makes its type `str`."
+      },
+      {
+        "id": "v-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nprint(int(\"7\") + 3)\n```",
+        "options": ["73", "10", "\"73\"", "TypeError"],
+        "answerIndex": 1,
+        "explanation": "`int(\"7\")` converts the string to the number 7, then 7 + 3 = 10."
+      },
+      {
+        "id": "v-q5",
+        "kind": "multiple-choice",
+        "prompt": "Which value is a `bool`?",
+        "options": ["\"True\"", "1", "True", "1.0"],
+        "answerIndex": 2,
+        "explanation": "`True` (no quotes) is a boolean. `\"True\"` is a string."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "v-f1", "front": "How do you assign a value to a variable?", "back": "With `=`, e.g. `name = \"Ada\"`. The name on the left refers to the value on the right." },
+    { "id": "v-f2", "front": "Name Python's four everyday built-in types.", "back": "int (whole numbers), float (decimals), str (text), bool (True/False)." },
+    { "id": "v-f3", "front": "What does `type(x)` do?", "back": "Returns the type of the value `x` currently refers to, e.g. `<class 'int'>`." },
+    { "id": "v-f4", "front": "What is 'dynamic typing'?", "back": "You don't declare a variable's type; Python infers it from the assigned value, and it can change on reassignment." },
+    { "id": "v-f5", "front": "How do you turn the string \"5\" into the number 5?", "back": "Use `int(\"5\")`. Use `float()` for decimals and `str()` to go back to text." }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "id": "loops",
+  "title": "Loops",
+  "level": "intermediate",
+  "description": "Repeat work with for and while loops, range, and loop control.",
+  "lesson": {
+    "id": "loops",
+    "title": "Loops",
+    "summary": "Iterate over sequences with for, repeat with while, and control the flow.",
+    "estimatedMinutes": 11,
+    "body": "## for loops: do something for each item\n\nA **for loop** runs its body once per item in a sequence:\n\n```python\nfor fruit in [\"apple\", \"banana\", \"cherry\"]:\n    print(fruit)\n```\n\nStrings are sequences too, so you can loop over characters:\n\n```python\nfor letter in \"hi\":\n    print(letter)\n```\n\n## Counting with range()\n\n`range(n)` produces the numbers `0` to `n-1`. With two arguments it's `range(start, stop)`:\n\n```python\nfor i in range(3):       # 0, 1, 2\n    print(i)\n\nfor i in range(1, 4):    # 1, 2, 3\n    print(i)\n```\n\n## while loops: repeat until a condition changes\n\nA **while loop** keeps running as long as its condition stays true:\n\n```python\ncount = 3\nwhile count > 0:\n    print(count)\n    count = count - 1\nprint(\"liftoff\")\n```\n\nMake sure something in the loop eventually makes the condition false, or it runs forever.\n\n## break and continue\n\n- `break` exits the loop immediately.\n- `continue` skips to the next iteration.\n\n```python\nfor n in range(10):\n    if n == 5:\n        break        # stop entirely at 5\n    if n % 2 == 0:\n        continue     # skip even numbers\n    print(n)          # prints 1, 3\n```\n\n## Looping with an index\n\nUse `enumerate()` when you need both the position and the item:\n\n```python\nfor index, fruit in enumerate([\"apple\", \"banana\"]):\n    print(index, fruit)   # 0 apple / 1 banana\n```\n\nPrefer `for` when you know what you're iterating over, and `while` when you're waiting for a condition to change."
+    ,
+    "examples": [
+      {
+        "title": "Sum the numbers 1 to 5",
+        "code": "total = 0\nfor i in range(1, 6):\n    total = total + i\nprint(\"sum:\", total)   # 15"
+      },
+      {
+        "title": "break and continue",
+        "description": "Predict the output before you run it.",
+        "code": "for n in range(10):\n    if n == 5:\n        break\n    if n % 2 == 0:\n        continue\n    print(n)"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "loops-quiz",
+    "title": "Loops — Quiz",
+    "questions": [
+      {
+        "id": "l-q1",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nfor i in range(3):\n    print(i)\n```",
+        "options": ["1 2 3", "0 1 2", "0 1 2 3", "3"],
+        "answerIndex": 1,
+        "explanation": "range(3) yields 0, 1, 2 — it stops before 3."
+      },
+      {
+        "id": "l-q2",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\ntotal = 0\nfor i in range(1, 4):\n    total += i\nprint(total)\n```",
+        "options": ["3", "6", "10", "4"],
+        "answerIndex": 1,
+        "explanation": "range(1, 4) is 1, 2, 3, and 1 + 2 + 3 = 6."
+      },
+      {
+        "id": "l-q3",
+        "kind": "multiple-choice",
+        "prompt": "What does `break` do inside a loop?",
+        "options": [
+          "Skips to the next iteration",
+          "Exits the loop immediately",
+          "Restarts the loop",
+          "Pauses for one second"
+        ],
+        "answerIndex": 1,
+        "explanation": "`break` leaves the loop entirely. `continue` skips to the next iteration."
+      },
+      {
+        "id": "l-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nn = 3\nwhile n > 0:\n    print(n)\n    n -= 1\n```",
+        "options": ["3 2 1", "3 2 1 0", "0 1 2", "infinite loop"],
+        "answerIndex": 0,
+        "explanation": "It prints 3, 2, 1 and stops once n reaches 0 (the condition n > 0 is then False)."
+      },
+      {
+        "id": "l-q5",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nfor n in range(4):\n    if n % 2 == 0:\n        continue\n    print(n)\n```",
+        "options": ["0 2", "1 3", "0 1 2 3", "nothing"],
+        "answerIndex": 1,
+        "explanation": "continue skips even numbers, so only the odds 1 and 3 print."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "l-f1", "front": "What numbers does `range(3)` produce?", "back": "0, 1, 2 — it stops before the given number." },
+    { "id": "l-f2", "front": "When do you use a while loop instead of a for loop?", "back": "When you repeat until a condition changes, rather than iterating over a known sequence." },
+    { "id": "l-f3", "front": "Difference between `break` and `continue`?", "back": "`break` exits the loop entirely; `continue` skips to the next iteration." },
+    { "id": "l-f4", "front": "How do you loop with both index and value?", "back": "Use `enumerate(seq)`: `for i, item in enumerate(seq):`." },
+    { "id": "l-f5", "front": "What's the danger of a while loop?", "back": "If the condition never becomes False, it loops forever. Make sure the body changes the condition." }
+  ]
+}

@@ -1,0 +1,56 @@
+/* highlight.js theme for fenced code blocks rendered by react-markdown.
+   Dark theme to match our dark <pre> blocks. Must come before @tailwind. */
+@import 'highlight.js/styles/github-dark.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}
+
+/* Shared content styling for Markdown bodies ("prose"-lite, no plugin needed). */
+.markdown h2 {
+  @apply mt-6 mb-2 text-xl font-semibold text-slate-900;
+}
+.markdown h3 {
+  @apply mt-5 mb-2 text-lg font-semibold text-slate-900;
+}
+.markdown p {
+  @apply my-3 leading-relaxed;
+}
+.markdown ul {
+  @apply my-3 list-disc pl-6 space-y-1;
+}
+.markdown ol {
+  @apply my-3 list-decimal pl-6 space-y-1;
+}
+.markdown a {
+  @apply text-brand-600 underline;
+}
+.markdown table {
+  @apply my-4 w-full border-collapse text-sm;
+}
+.markdown th,
+.markdown td {
+  @apply border border-slate-200 px-3 py-1.5 text-left;
+}
+.markdown th {
+  @apply bg-slate-100 font-semibold;
+}
+/* Inline code */
+.markdown code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em] text-brand-700;
+}
+/* Fenced code blocks (react-markdown wraps these in <pre><code>) */
+.markdown pre {
+  @apply my-4 overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm;
+}
+.markdown pre code {
+  @apply bg-transparent p-0 text-slate-100;
+}

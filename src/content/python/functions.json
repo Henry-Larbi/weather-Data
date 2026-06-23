@@ -1,0 +1,83 @@
+{
+  "id": "functions",
+  "title": "Functions",
+  "level": "intermediate",
+  "description": "Package reusable logic with def, parameters, return values, and defaults.",
+  "lesson": {
+    "id": "functions",
+    "title": "Functions",
+    "summary": "Define reusable blocks of logic with parameters and return values.",
+    "estimatedMinutes": 12,
+    "body": "## Defining a function\n\nA **function** packages code so you can reuse it. Define one with `def`:\n\n```python\ndef greet():\n    print(\"Hello!\")\n\ngreet()   # call it -> Hello!\n```\n\nThe indented block is the function body. Nothing runs until you *call* the function with `()`.\n\n## Parameters and arguments\n\n**Parameters** are inputs named in the definition; **arguments** are the values you pass in:\n\n```python\ndef greet(name):\n    print(f\"Hello, {name}!\")\n\ngreet(\"Ada\")   # Hello, Ada!\n```\n\n## Returning a value\n\nUse `return` to send a result back to the caller. A function without `return` gives back `None`:\n\n```python\ndef add(a, b):\n    return a + b\n\nresult = add(2, 3)   # 5\nprint(result)\n```\n\nOnce `return` runs, the function ends immediately.\n\n## Default values\n\nGive a parameter a default so the argument becomes optional:\n\n```python\ndef greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\ngreet(\"Ada\")               # \"Hello, Ada!\"\ngreet(\"Ada\", \"Welcome\")  # \"Welcome, Ada!\"\n```\n\n## Keyword arguments\n\nYou can pass arguments by name, in any order, which makes calls clearer:\n\n```python\ngreet(name=\"Ada\", greeting=\"Hi\")\n```\n\n## Why functions matter\n\nFunctions let you name an idea, avoid repeating yourself, and test pieces in isolation. A good function does one clear thing and has a descriptive name. Keep them small."
+    ,
+    "examples": [
+      {
+        "title": "A function that returns a value",
+        "code": "def add(a, b):\n    return a + b\n\nprint(add(2, 3))      # 5\nprint(add(10, -4))    # 6"
+      },
+      {
+        "title": "Default and keyword arguments",
+        "description": "Try calling greet in different ways.",
+        "code": "def greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\nprint(greet(\"Ada\"))\nprint(greet(\"Ada\", \"Welcome\"))\nprint(greet(greeting=\"Hi\", name=\"Grace\"))"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "functions-quiz",
+    "title": "Functions — Quiz",
+    "questions": [
+      {
+        "id": "f-q1",
+        "kind": "multiple-choice",
+        "prompt": "Which keyword defines a function in Python?",
+        "options": ["function", "def", "fun", "lambda"],
+        "answerIndex": 1,
+        "explanation": "`def` defines a named function. (`lambda` makes a small anonymous one.)"
+      },
+      {
+        "id": "f-q2",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\ndef double(x):\n    return x * 2\n\nprint(double(5))\n```",
+        "options": ["5", "10", "55", "None"],
+        "answerIndex": 1,
+        "explanation": "double(5) returns 5 * 2 = 10."
+      },
+      {
+        "id": "f-q3",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\ndef f():\n    print(\"hi\")\n\nresult = f()\nprint(result)\n```",
+        "options": ["hi\\nhi", "hi\\nNone", "None", "Error"],
+        "answerIndex": 1,
+        "explanation": "f() prints \"hi\" but has no return, so it returns None — printed on the next line."
+      },
+      {
+        "id": "f-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\ndef greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\nprint(greet(\"Ada\"))\n```",
+        "options": ["Hello, Ada!", "Ada, Hello!", "greeting, Ada!", "Error"],
+        "answerIndex": 0,
+        "explanation": "greeting defaults to \"Hello\", so the result is \"Hello, Ada!\"."
+      },
+      {
+        "id": "f-q5",
+        "kind": "multiple-choice",
+        "prompt": "What happens right after a `return` statement executes?",
+        "options": [
+          "The next line in the function runs",
+          "The function ends and hands the value back to the caller",
+          "The program stops entirely",
+          "The function restarts"
+        ],
+        "answerIndex": 1,
+        "explanation": "`return` ends the function immediately and passes the value back to whoever called it."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "f-f1", "front": "Which keyword defines a function?", "back": "`def`, e.g. `def add(a, b):`." },
+    { "id": "f-f2", "front": "Difference between a parameter and an argument?", "back": "A parameter is the name in the definition; an argument is the actual value you pass when calling." },
+    { "id": "f-f3", "front": "What does a function return if it has no `return`?", "back": "`None`." },
+    { "id": "f-f4", "front": "How do you make a parameter optional?", "back": "Give it a default value, e.g. `def greet(name, greeting=\"Hello\"):`." },
+    { "id": "f-f5", "front": "What does `return` do besides hand back a value?", "back": "It ends the function immediately — any code after it in the function won't run." }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "pylearn",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PyLearn — a content-driven web app that teaches Python from beginner to advanced.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "tsc -b --noEmit",
+    "sync:content": "node scripts/sync-content.mjs"
+  },
+  "dependencies": {
+    "@codemirror/lang-python": "^6.1.6",
+    "@supabase/supabase-js": "^2.45.0",
+    "@uiw/react-codemirror": "^4.23.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.26.0",
+    "rehype-highlight": "^7.0.0",
+    "remark-gfm": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "highlight.js": "^11.10.0",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0"
+  }
+}

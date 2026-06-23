@@ -1,0 +1,83 @@
+{
+  "id": "strings",
+  "title": "Strings",
+  "level": "beginner",
+  "description": "Create, combine, slice, and format text in Python.",
+  "lesson": {
+    "id": "strings",
+    "title": "Strings",
+    "summary": "Work with text: indexing, slicing, methods, and f-strings.",
+    "estimatedMinutes": 10,
+    "body": "## Making strings\n\nA **string** is a sequence of characters. Write one with single or double quotes (they behave the same):\n\n```python\ngreeting = \"hello\"\nname = 'Ada'\n```\n\nFor text that spans several lines, use triple quotes:\n\n```python\npoem = \"\"\"roses are red\nviolets are blue\"\"\"\n```\n\n## Combining text\n\nJoin strings with `+` and repeat with `*`:\n\n```python\n\"foo\" + \"bar\"   # \"foobar\"\n\"ab\" * 3         # \"ababab\"\n```\n\n## Indexing and slicing\n\nCharacters are numbered from `0`. Negative indexes count from the end. A *slice* `s[start:stop]` includes `start` and excludes `stop`:\n\n```python\ns = \"python\"\ns[0]     # \"p\"\ns[-1]    # \"n\"\ns[0:3]   # \"pyt\"\ns[2:]    # \"thon\"\n```\n\nStrings are **immutable**: you can't change a character in place, but you can build a new string.\n\n## Useful methods\n\nStrings come with many built-in methods:\n\n```python\n\"  hi  \".strip()     # \"hi\"   (remove surrounding whitespace)\n\"Ada\".upper()         # \"ADA\"\n\"HELLO\".lower()       # \"hello\"\n\"a,b,c\".split(\",\")   # ['a', 'b', 'c']\n\"-\".join([\"a\", \"b\"]) # \"a-b\"\n```\n\n## f-strings (the modern way to format)\n\nPut an `f` before the quotes and embed expressions in `{}`:\n\n```python\nname = \"Ada\"\nage = 30\nprint(f\"{name} is {age} years old\")   # Ada is 30 years old\nprint(f\"Next year: {age + 1}\")          # Next year: 31\n```\n\nf-strings are readable and fast — prefer them over `+` for building messages."
+    ,
+    "examples": [
+      {
+        "title": "Slice and dice",
+        "description": "Try changing the indexes and re-running.",
+        "code": "s = \"python\"\nprint(s[0])      # p\nprint(s[-1])     # n\nprint(s[0:3])    # pyt\nprint(s[::-1])   # reversed: nohtyp"
+      },
+      {
+        "title": "Build a message with an f-string",
+        "code": "name = \"Ada\"\nitems = 3\nprice = 2.5\ntotal = items * price\nprint(f\"{name}, your {items} items cost ${total:.2f}\")"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "strings-quiz",
+    "title": "Strings — Quiz",
+    "questions": [
+      {
+        "id": "s-q1",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nprint(\"ab\" * 3)\n```",
+        "options": ["ab3", "ababab", "[ab, ab, ab]", "Error"],
+        "answerIndex": 1,
+        "explanation": "`*` repeats a string, so \"ab\" * 3 is \"ababab\"."
+      },
+      {
+        "id": "s-q2",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\ns = \"python\"\nprint(s[1:4])\n```",
+        "options": ["pyt", "yth", "ytho", " python"],
+        "answerIndex": 1,
+        "explanation": "Slice [1:4] includes index 1 and excludes 4, giving characters y, t, h."
+      },
+      {
+        "id": "s-q3",
+        "kind": "multiple-choice",
+        "prompt": "Which method removes whitespace from both ends of a string?",
+        "options": [".trim()", ".strip()", ".clean()", ".cut()"],
+        "answerIndex": 1,
+        "explanation": "Python uses `.strip()`. (`.trim()` is JavaScript.)"
+      },
+      {
+        "id": "s-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nname = \"Ada\"\nprint(f\"Hi {name}!\")\n```",
+        "options": ["Hi {name}!", "Hi Ada!", "Hi name!", "Error"],
+        "answerIndex": 1,
+        "explanation": "An f-string evaluates `{name}` and inserts its value, \"Ada\"."
+      },
+      {
+        "id": "s-q5",
+        "kind": "multiple-choice",
+        "prompt": "Strings in Python are immutable. What does that mean?",
+        "options": [
+          "They cannot be printed",
+          "You cannot change a character in place; operations return new strings",
+          "They must be lowercase",
+          "They can only hold numbers"
+        ],
+        "answerIndex": 1,
+        "explanation": "Immutable means the value can't be modified in place; methods produce new strings."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "s-f1", "front": "How do you write a multi-line string?", "back": "Use triple quotes: `\"\"\"line one\\nline two\"\"\"`." },
+    { "id": "s-f2", "front": "What does `s[-1]` give you?", "back": "The last character of the string (negative indexes count from the end)." },
+    { "id": "s-f3", "front": "What does the slice `s[1:4]` include?", "back": "Indexes 1, 2, and 3 — start is included, stop is excluded." },
+    { "id": "s-f4", "front": "How do you embed a variable inside a string?", "back": "Use an f-string: `f\"Hello {name}\"`." },
+    { "id": "s-f5", "front": "What does `\"a,b,c\".split(\",\")` return?", "back": "The list `['a', 'b', 'c']`." }
+  ]
+}

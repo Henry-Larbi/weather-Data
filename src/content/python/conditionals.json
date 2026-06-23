@@ -1,0 +1,78 @@
+{
+  "id": "conditionals",
+  "title": "Conditionals",
+  "level": "beginner",
+  "description": "Make decisions with if / elif / else and boolean logic.",
+  "lesson": {
+    "id": "conditionals",
+    "title": "Conditionals",
+    "summary": "Branch your program with if/elif/else and combine conditions.",
+    "estimatedMinutes": 9,
+    "body": "## Making decisions\n\nA **conditional** runs a block of code only when a condition is true:\n\n```python\ntemperature = 30\nif temperature > 25:\n    print(\"It's warm\")\n```\n\nThe condition is any expression that evaluates to `True` or `False`. The indented block runs only when it's `True`.\n\n## if / elif / else\n\nChain alternatives with `elif` (else-if) and a final `else`:\n\n```python\nscore = 72\nif score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelif score >= 70:\n    grade = \"C\"\nelse:\n    grade = \"F\"\nprint(grade)   # C\n```\n\nPython checks each branch top to bottom and runs the **first** one that matches, then skips the rest.\n\n## Comparison operators\n\n```python\n==   # equal to\n!=   # not equal to\n<  >  <=  >=\n```\n\nNote `=` assigns, but `==` compares — a very common beginner mix-up.\n\n## Combining conditions\n\nUse `and`, `or`, and `not`:\n\n```python\nage = 20\nhas_ticket = True\nif age >= 18 and has_ticket:\n    print(\"Enjoy the show\")\n```\n\n## Truthiness\n\nMany values act as `True`/`False` in a condition. Empty things are *falsy*:\n\n```python\nif name:          # True if name is a non-empty string\n    print(name)\nif items:          # True if the list is not empty\n    print(\"has items\")\n```\n\n`0`, `0.0`, `\"\"`, `[]`, `{}`, and `None` are all falsy; almost everything else is truthy."
+    ,
+    "examples": [
+      {
+        "title": "Grade a score",
+        "description": "Change `score` and re-run to hit different branches.",
+        "code": "score = 72\nif score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelif score >= 70:\n    grade = \"C\"\nelse:\n    grade = \"F\"\nprint(f\"Score {score} -> grade {grade}\")"
+      },
+      {
+        "title": "Combine conditions",
+        "code": "age = 20\nhas_ticket = True\nif age >= 18 and has_ticket:\n    print(\"Welcome in\")\nelse:\n    print(\"Sorry, not this time\")"
+      }
+    ]
+  },
+  "quiz": {
+    "id": "conditionals-quiz",
+    "title": "Conditionals — Quiz",
+    "questions": [
+      {
+        "id": "c-q1",
+        "kind": "multiple-choice",
+        "prompt": "Which keyword introduces an 'else if' branch in Python?",
+        "options": ["elseif", "elif", "else if", "ei"],
+        "answerIndex": 1,
+        "explanation": "Python spells it `elif`."
+      },
+      {
+        "id": "c-q2",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nx = 5\nif x > 10:\n    print(\"big\")\nelif x > 3:\n    print(\"medium\")\nelse:\n    print(\"small\")\n```",
+        "options": ["big", "medium", "small", "nothing"],
+        "answerIndex": 1,
+        "explanation": "5 is not > 10 but is > 3, so the first matching branch ('medium') runs."
+      },
+      {
+        "id": "c-q3",
+        "kind": "multiple-choice",
+        "prompt": "Which operator tests equality (not assignment)?",
+        "options": ["=", "==", ":=", "=="],
+        "answerIndex": 1,
+        "explanation": "`==` compares; a single `=` assigns."
+      },
+      {
+        "id": "c-q4",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nitems = []\nif items:\n    print(\"has items\")\nelse:\n    print(\"empty\")\n```",
+        "options": ["has items", "empty", "True", "Error"],
+        "answerIndex": 1,
+        "explanation": "An empty list is falsy, so the else branch runs."
+      },
+      {
+        "id": "c-q5",
+        "kind": "predict-output",
+        "prompt": "What does this print?\n\n```python\nage = 16\nif age >= 18 and age < 65:\n    print(\"adult\")\nelse:\n    print(\"not in range\")\n```",
+        "options": ["adult", "not in range", "True", "Error"],
+        "answerIndex": 1,
+        "explanation": "16 >= 18 is False, so the whole `and` is False and the else runs."
+      }
+    ]
+  },
+  "flashcards": [
+    { "id": "c-f1", "front": "What's the difference between `=` and `==`?", "back": "`=` assigns a value to a name; `==` compares two values and returns a bool." },
+    { "id": "c-f2", "front": "How do you write 'else if' in Python?", "back": "`elif condition:`" },
+    { "id": "c-f3", "front": "Name the three boolean operators.", "back": "`and`, `or`, `not`." },
+    { "id": "c-f4", "front": "Which everyday values are falsy?", "back": "`0`, `0.0`, `\"\"`, `[]`, `{}`, and `None`. Most other values are truthy." },
+    { "id": "c-f5", "front": "In an if/elif/elif/else chain, how many branches run?", "back": "At most one — the first whose condition is True. The rest are skipped." }
+  ]
+}
