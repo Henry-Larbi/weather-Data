@@ -485,7 +485,7 @@ def airtime_bundle(current_balance, data_balance, airtime_balance):
     print("3. Data Sharing")
 
     while True:
-        choice = input("Enter choice (1-3): ")
+        choice = input("Enter your choice: ")
         if choice in ["1", "2", "3"]:
             break
         print("Invalid choice.")
