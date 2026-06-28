@@ -302,6 +302,16 @@ def transfer_money(current_balance, MOMO_pin):
 
 # ─────────────────────────── MOMO PAY ────────────────────────────────
 
+def generate_ecg_token() -> str:
+    # Appendix: 20-digit ECG token built from 5 blocks
+    block1 = random.randint(1000, 9999)              # Base
+    block2 = int(str(block1)[::-1])                   # Mirror (reversed base)
+    block3 = 9999 - block1                            # Complement
+    block4 = sum(int(d) for d in str(block1)) * 111   # Checksum
+    block5 = (block1 * block2) % 10000                # Scaler
+    return f"{block1} {block2} {block3} {block4} {block5}"
+
+
 class MomoPay():
     def __init__(self, current_balance: float, momopin: str):
         self.amount = current_balance
@@ -317,125 +327,138 @@ class MomoPay():
                 return True
         return False
 
-    def charges(self, amount: float) -> tuple:
-        charge = round(amount * E_LEVY, 2)
-        return charge, charge
+    def pay_merchant(self, amount: float) -> tuple:
+        # MomoPay: E-levy only, no service charge
+        elevy = round(amount * E_LEVY, 2)
+        total = round(amount + elevy, 2)
+        if total <= self.amount:
+            self.amount = round(self.amount - total, 2)
+            return True, elevy
+        return False, elevy
 
-    def pay(self, amount: float, total_charge: float) -> tuple:
-        if amount + total_charge <= self.amount:
-            self.amount = round(self.amount - (amount + total_charge), 2)
-            return self.amount, True
-        return self.amount, False
-
-    def message(self, amount: float, charge: float):
-        print(f"GHS {amount:.2f} paid successfully to {self.merchant_name}")
-        print(f"E-levy charge: GHS {charge:.2f}")
-        print(f"New balance: GHS {self.amount:.2f}")
+    def pay_bill(self, amount: float) -> bool:
+        # ECG / DSTV: flat processing fee, no E-levy
+        total = round(amount + PROCESSING_FEE, 2)
+        if total <= self.amount:
+            self.amount = round(self.amount - total, 2)
+            return True
+        return False
 
 
 def momopay_paybill(current_balance, MOMO_pin):
     pay = MomoPay(current_balance, MOMO_pin)
 
     print("\nMomoPay/Paybill:")
-    print("1. MomoPay")
-    print("2. Paybill - ECG")
-    print("3. Paybill - DSTV")
+    print("- Momopay")
+    print("- Paybill")
 
     while True:
-        choice = input("Enter choice (1-3): ")
-        if choice in ["1", "2", "3"]:
+        choice = input("Enter your choice: ")
+        if choice in ["1", "2"]:
             break
         print("Invalid choice.")
 
+    # ─────────────── MOMOPAY (no service charge, no PIN) ───────────────
     if choice == "1":
         while True:
             try:
-                merchant_id = int(input("Enter Merchant ID: "))
+                merchant_id = int(input("Enter the 6-digit Merchant ID: "))
                 if pay.find_merchant(merchant_id):
-                    print(f"Merchant: {pay.merchant_name}")
                     break
-                else:
-                    print("Merchant not found. Try again.")
+                print("Merchant not found. Try again.")
             except ValueError:
                 print("Invalid Merchant ID.")
 
-        transfer_amount = get_valid_amount("Enter amount to pay: ", pay.amount)
-        total_charge, charge = pay.charges(transfer_amount)
+        print(f"Proceed to make payment to merchant, {pay.merchant_name}")
+        amount = get_valid_amount("Enter the amount to pay: ", pay.amount)
 
-        pin_input = input("Enter your MOMO PIN to authorize payment: ")
-        validate_pin(pin_input, MOMO_pin)
-
-        new_balance, confirm = pay.pay(transfer_amount, total_charge)
-        if confirm:
-            pay.message(transfer_amount, charge)
-            txn = record_transaction("MoMoPay", transfer_amount, charge, pay.merchant_name, "Successful", pay.amount)
+        success, elevy = pay.pay_merchant(amount)
+        if success:
+            print(f"GHS {amount} has been paid successfully to {pay.merchant_name}, "
+                  f"with E-levy charge of GHS {elevy}.")
+            print(f"New balance: GHS {pay.amount}")
+            txn = record_transaction("MoMoPay", amount, elevy, pay.merchant_name, "Successful", pay.amount)
             log_transaction(txn)
-            current_balance = pay.amount
         else:
             print("Insufficient balance.")
 
+    # ─────────────────────────── PAYBILL ──────────────────────────────
     elif choice == "2":
+        print("- ECG (Electricity)")
+        print("- DSTV")
+
         while True:
-            meter_number = input("Enter Meter Number: ")
-            if meter_number in registered_meters:
+            bill_choice = input("Enter your choice: ")
+            if bill_choice in ["1", "2"]:
                 break
-            print("Invalid meter number. Try again.")
+            print("Invalid choice.")
 
-        meter_index = registered_meters.index(meter_number)
-        meter_name = list(meter_dict[meter_index].values())[1]
+        # ----- ECG (Electricity) -----
+        if bill_choice == "1":
+            while True:
+                meter_number = input("Enter your ECG Meter number to proceed: ")
+                if meter_number in registered_meters:
+                    break
+                print("Invalid meter number. Try again.")
 
-        transfer_amount = get_valid_amount("Enter amount for ECG (GHS): ", pay.amount)
-        total_charge, charge = pay.charges(transfer_amount)
+            amount = get_valid_amount("Enter the amount to pay: ", pay.amount)
+            print(f"You are paying GHS {amount:.2f} for ECG Meter: {meter_number}")
+            print(f"Processing fee : GHS {PROCESSING_FEE}")
+            print(f"Total amount : GHS {amount + PROCESSING_FEE:.2f}")
 
-        pin_input = input("Enter your MOMO PIN to authorize payment: ")
-        validate_pin(pin_input, MOMO_pin)
+            pin_input = input("Enter your 4-digit PIN: ")
+            validate_pin(pin_input, MOMO_pin)
 
-        new_balance, confirm = pay.pay(transfer_amount, total_charge)
-        if confirm:
-            block1 = random.randint(1000, 9999)
-            block2 = int(str(block1)[::-1])
-            block3 = 9999 - block1
-            block4 = sum(int(d) for d in str(block1)) * 111
-            block5 = (block1 * block2) % 10000
-            token = f"{block1} {block2} {block3} {block4} {block5}"
-            print(f"GHS {transfer_amount:.2f} ECG payment for {meter_name} successful")
-            print(f"Token: {token}")
-            print(f"E-levy charge: GHS {charge:.2f}")
-            print(f"New balance: GHS {pay.amount:.2f}")
-            txn = record_transaction("ECG PayBill", transfer_amount, charge, meter_name, "Successful", pay.amount)
-            log_transaction(txn)
-            current_balance = pay.amount
-        else:
-            print("Insufficient balance.")
+            if pay.pay_bill(amount):
+                token = generate_ecg_token()
+                print(f"Payment of GHS {amount:.2f} to ECG successful.")
+                print(f"Your token is: {token}")
+                print(f"New balance: GHS {pay.amount:.2f}")
+                txn = record_transaction("ECG PayBill", amount, PROCESSING_FEE, meter_number, "Successful", pay.amount)
+                log_transaction(txn)
+            else:
+                print("Insufficient balance.")
 
-    elif choice == "3":
-        while True:
-            iuc_number = input("Enter IUC Number: ")
-            if iuc_number in registered_iuc:
-                break
-            print("Invalid IUC number. Try again.")
+        # ----- DSTV -----
+        elif bill_choice == "2":
+            while True:
+                iuc_number = input("Enter IUC Number: ")
+                if iuc_number in registered_iuc:
+                    break
+                print("Invalid IUC number. Try again.")
 
-        iuc_index = registered_iuc.index(iuc_number)
-        iuc_name = list(dstv_dict[iuc_index].values())[1]
+            iuc_index = registered_iuc.index(iuc_number)
+            iuc_name = list(dstv_dict[iuc_index].values())[1]
 
-        transfer_amount = get_valid_amount("Enter amount for DSTV (GHS): ", pay.amount)
-        total_charge, charge = pay.charges(transfer_amount)
+            print("--------------DSTV PACKAGES--------------")
+            print("- Compact - GHS 250.00")
+            print("- Family - GHS 280.00")
+            print("--------------------------------------------------")
 
-        pin_input = input("Enter your MOMO PIN to authorize payment: ")
-        validate_pin(pin_input, MOMO_pin)
+            packages = {"1": (250.00, "Compact"), "2": (280.00, "Family")}
+            while True:
+                package_choice = input("Enter your package choice : ")
+                if package_choice in ["1", "2"]:
+                    break
+                print("Invalid choice.")
 
-        new_balance, confirm = pay.pay(transfer_amount, total_charge)
-        if confirm:
-            print(f"GHS {transfer_amount:.2f} DSTV payment for {iuc_name} successful")
-            print(f"E-levy charge: GHS {charge:.2f}")
-            print(f"New balance: GHS {pay.amount:.2f}")
-            txn = record_transaction("DSTV PayBill", transfer_amount, charge, iuc_name, "Successful", pay.amount)
-            log_transaction(txn)
-            current_balance = pay.amount
-        else:
-            print("Insufficient balance.")
+            price, label = packages[package_choice]
+            print(f"You are paying GHS {price:.2f} for {iuc_name} - {label}")
+            print(f"Processing fee : GHS {PROCESSING_FEE}")
+            print(f"Total amount : GHS {price + PROCESSING_FEE:.2f}")
 
-    return current_balance
+            pin_input = input("Enter your 4-digit PIN: ")
+            validate_pin(pin_input, MOMO_pin)
+
+            if pay.pay_bill(price):
+                print(f"Payment of GHS {price:.2f} to DSTV successful.")
+                print(f"New balance: GHS {pay.amount:.2f}")
+                txn = record_transaction("DSTV PayBill", price, PROCESSING_FEE, iuc_name, "Successful", pay.amount)
+                log_transaction(txn)
+            else:
+                print("Insufficient balance.")
+
+    return pay.amount
 
 
 # ─────────────────────────── AIRTIME AND BUNDLES ─────────────────────
