@@ -460,8 +460,16 @@ class AirtimeAndBundles():
             return True
         return False
 
-    def share_data(self, recipient: str, mb_to_share: float) -> bool:
-        if self.data_balance >= mb_to_share and self.amount >= DATA_SHARE_FEE:
+    def find_recipient(self, number: str):
+        if number[:3] == "059" and len(number) == 11:
+            for user in telestar_user_dict:
+                if user["Phone Number"] == number:
+                    return user["Name of Customer"]
+        return None
+
+    def share_data(self, mb_to_share: float) -> bool:
+        # Bundle must be greater than amount shared, and cash must cover the fee
+        if self.data_balance > mb_to_share and self.amount > DATA_SHARE_FEE:
             self.data_balance = round(self.data_balance - mb_to_share, 2)
             self.amount = round(self.amount - DATA_SHARE_FEE, 2)
             return True
@@ -471,10 +479,10 @@ class AirtimeAndBundles():
 def airtime_bundle(current_balance, data_balance, airtime_balance):
     ab = AirtimeAndBundles(current_balance, data_balance, airtime_balance)
 
-    print("\nAirtime & Bundles:")
+    print("\nAirtime and Bundles:")
     print("1. Buy Airtime")
-    print("2. Buy Bundle")
-    print("3. Share Data")
+    print("2. Buy Bundles")
+    print("3. Data Sharing")
 
     while True:
         choice = input("Enter choice (1-3): ")
@@ -533,27 +541,36 @@ def airtime_bundle(current_balance, data_balance, airtime_balance):
 
     elif choice == "3":
         if ab.data_balance <= 0:
-            print("You have no data balance to share.")
+            print("You have no data to share.")
+            return ab.amount, ab.data_balance, ab.airtime_balance
+
+        print(f"You have {ab.data_balance} MB of data")
+
+        while True:
+            recipient = input("Enter Recipient's TeleStar phone number: ")
+            recipient_name = ab.find_recipient(recipient)
+            if recipient_name:
+                break
+            print("Invalid TeleStar number. Try again.")
+
+        while True:
+            verify = input("Verify the phone number by entering it again: ")
+            if verify == recipient:
+                break
+            print("Phone number mismatch. Please try again.")
+
+        print(f"Proceed to share data to {recipient_name}")
+        mb_to_share = get_valid_amount("Amount to share in MB: ", ab.data_balance)
+
+        if ab.share_data(mb_to_share):
+            print(f"{mb_to_share} MB has been sent successfully to {recipient}")
+            print(f"Service charge: GHS {DATA_SHARE_FEE}.")
+            print(f"New data balance : {ab.data_balance}")
+            print(f"New balance : GHS {ab.amount}")
+            txn = record_transaction("Data Share", mb_to_share, DATA_SHARE_FEE, recipient, "Successful", ab.amount)
+            log_transaction(txn)
         else:
-            while True:
-                recipient = input("Enter recipient TeleStar phone number (059xxxxxxxx): ")
-                if recipient[:3] == "059" and len(recipient) == 11 and recipient.isdigit():
-                    break
-                print("Invalid TeleStar number. Try again.")
-
-            print(f"Your data balance: {ab.data_balance:.2f} MB")
-            mb_to_share = get_valid_amount("Enter MB to share: ", ab.data_balance)
-            print(f"Processing fee: GHS {DATA_SHARE_FEE:.2f}")
-
-            confirm = input(f"Share {mb_to_share:.2f}MB to {recipient} for GHS {DATA_SHARE_FEE:.2f} fee? 1.Yes 2.No: ")
-            if confirm == "1":
-                if ab.share_data(recipient, mb_to_share):
-                    print(f"{mb_to_share:.2f}MB shared to {recipient} successfully.")
-                    print(f"Remaining data: {ab.data_balance:.2f} MB | Balance: GHS {ab.amount:.2f}")
-                    txn = record_transaction("Data Share", mb_to_share, DATA_SHARE_FEE, recipient, "Successful", ab.amount)
-                    log_transaction(txn)
-                else:
-                    print("Insufficient data or balance to cover processing fee.")
+            print("Sharing failed: your bundle must exceed the amount shared and your cash must cover the fee.")
 
     return ab.amount, ab.data_balance, ab.airtime_balance
 
