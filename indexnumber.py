@@ -89,6 +89,7 @@ loan_taken_time = None
 def record_transaction(transaction_type: str, amount: float, charges: float,
                        recipient: str, status: str, balance_after: float) -> Dict[str, Union[str, float]]:
     transaction = {
+        "txn_id": generate_transaction_id(),
         "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "type": transaction_type,
         "amount": amount,
@@ -104,6 +105,7 @@ def record_transaction(transaction_type: str, amount: float, charges: float,
 def display_transaction(transaction: Dict[str, Union[str, float]]) -> str:
     return (
         f"\n--- Record ---\n"
+        f"Txn ID        : {transaction['txn_id']}\n"
         f"Time          : {transaction['time']}\n"
         f"Type          : {transaction['type']}\n"
         f"Amount (GHS)  : {transaction['amount']:.2f}\n"
@@ -121,7 +123,7 @@ def generate_transaction_id() -> str:
 
 def log_transaction(transaction: Dict[str, Union[str, float]]) -> None:
     import csv
-    fieldnames = ["time", "type", "amount", "charges", "recipient", "balance_after", "status"]
+    fieldnames = ["txn_id", "time", "type", "amount", "charges", "recipient", "balance_after", "status"]
     file_exists = os.path.exists("transaction_log.csv")
     with open("transaction_log.csv", "a", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -734,13 +736,19 @@ class MyWallet():
     def mini_statement(self) -> list:
         return history
 
-    def report_fraud(self, fraud_type: str, amount: float) -> str:
-        if fraud_type == "1":
-            self.amount = round(self.amount + amount, 2)
-            return f"GHS {amount:.2f} has been reversed to your account. New balance: GHS {self.amount:.2f}"
-        else:
-            ref = generate_transaction_id()
-            return f"Reversal request for GHS {amount:.2f} submitted. Reference ID: {ref}"
+    def find_transaction(self, txn_id: str):
+        for txn in history:
+            if str(txn["txn_id"]) == txn_id:
+                return txn
+        return None
+
+    def self_reversal(self, txn_id: str) -> tuple:
+        txn = self.find_transaction(txn_id)
+        if txn is None:
+            return False, 0.0
+        refund = txn["amount"]
+        self.amount = round(self.amount + refund, 2)
+        return True, refund
 
 
 def my_wallet(current_balance, MOMO_pin, data_balance, airtime_balance):
@@ -793,28 +801,34 @@ def my_wallet(current_balance, MOMO_pin, data_balance, airtime_balance):
         print("MOMO PIN successfully changed!")
 
     elif wallet_choice == "4":
-        pin_input = input("Enter MOMO PIN: ")
-        validate_pin(pin_input, MOMO_pin)
-
-        print("\nReport Fraud:")
-        print("1. Self Reversal (undo your own transaction)")
-        print("2. Request Reversal (report unauthorized transaction)")
+        print("--------------------Report Fraud--------------------")
+        print("1. Self Reversal (Same Network)")
+        print("2. Request Reversal (Other Networks)")
+        print("---------------------------------------------------------")
 
         while True:
-            fraud_choice = input("Enter choice (1-2): ")
+            fraud_choice = input("Select an option : ")
             if fraud_choice in ["1", "2"]:
                 break
             print("Invalid choice.")
 
-        amount = get_valid_amount("Enter the transaction amount to reverse: ")
-        result = wallet.report_fraud(fraud_choice, amount)
-        print(result)
-
         if fraud_choice == "1":
-            txn = record_transaction("Fraud Reversal", amount, 0.0, "Self", "Reversed", wallet.amount)
-            log_transaction(txn)
+            txn_id = input("Enter the Transaction ID to reverse: ")
+            success, refund = wallet.self_reversal(txn_id)
+            if success:
+                print(f"Transaction {txn_id} reversed. GHS {refund:.2f} has been refunded.")
+                print(f"New Balance: GHS {wallet.amount:.2f}")
+                txn = record_transaction("Fraud Reversal", refund, 0.0, "Owner", "Reversed", wallet.amount)
+                log_transaction(txn)
+            else:
+                print(f"Transaction {txn_id} not found.")
         else:
-            txn = record_transaction("Fraud Report", amount, 0.0, "Self", "Reported", wallet.amount)
+            txn_id = input("Enter the Transaction ID: ")
+            wrong_number = input("Enter the Wrong Recipient Number: ")
+            print(f"Request received for Wrong Transaction reversal. ID : {txn_id}")
+            print(f"A reversal request has been sent to the network of {wrong_number}")
+            print("You will be notified once resolved")
+            txn = record_transaction("Fraud Report", 0.0, 0.0, wrong_number, "Reported", wallet.amount)
             log_transaction(txn)
 
     return wallet.amount, MOMO_pin
